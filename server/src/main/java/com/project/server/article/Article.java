@@ -27,11 +27,6 @@ public class Article {
     private String content;
     private String author;
     private LocalDate date;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "league_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private League league;
 
     public Article(String title, String headerImage, String content, String author) {
         this.title = title;
@@ -90,14 +85,6 @@ public class Article {
 
     public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public League getLeague() {
-        return league;
-    }
-
-    public void setLeague(League league) {
-        this.league = league;
     }
 
     @Override
