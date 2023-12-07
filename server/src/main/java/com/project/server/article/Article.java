@@ -27,6 +27,9 @@ public class Article {
     private String content;
     private String author;
     private LocalDate date;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "league_id")
+    private League league;
 
     public Article(String title, String headerImage, String content, String author) {
         this.title = title;
@@ -34,6 +37,14 @@ public class Article {
         this.content = content;
         this.author = author;
         this.date = LocalDate.now();
+    }
+
+    public League getLeague() {
+        return league;
+    }
+
+    public void setLeague(League league) {
+        this.league = league;
     }
 
     public Article() {

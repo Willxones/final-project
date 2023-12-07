@@ -1,9 +1,12 @@
 package com.project.server.article;
 
+import com.project.server.league.League;
+import com.project.server.league.LeagueRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -13,9 +16,16 @@ public class ArticleService {
     public ArticleService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
+    @Autowired
+    private LeagueRepository leagueRepository;
 
-    public void createArticle(Article article) {
-
+    public void createArticle(Article article, Long leagueId) {
+        Optional<League> leagueOptional = leagueRepository.findById(leagueId);
+        if (leagueOptional.isEmpty()) {
+            throw new IllegalStateException("League does not exist");
+        }
+        League league = leagueOptional.get();
+        article.setLeague(league);
         articleRepository.save(article);
     }
 
@@ -46,5 +56,16 @@ public class ArticleService {
         originalArticle.setAuthor(updatedArticle.getAuthor());
         originalArticle.setContent(updatedArticle.getContent());
         originalArticle.setHeaderImage(updatedArticle.getHeaderImage());
+    }
+
+    public List<Article> findAllArticles() {
+        return articleRepository.findAll();
+    }
+    public List<Article> findArticlesByLeague(Long leagueId) {
+        Optional<League> optionalLeague = leagueRepository.findById(leagueId);
+        if (optionalLeague.isEmpty()) {
+            throw new IllegalStateException("League does not exist");
+        }
+        return articleRepository.findAllByLeague_Id(leagueId);
     }
 }
