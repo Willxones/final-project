@@ -2,7 +2,10 @@ package com.project.server.author;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.server.article.Article;
+import com.project.server.user.UserController;
 import jakarta.persistence.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
 
@@ -12,13 +15,13 @@ import java.util.List;
 public class Author {
     @Id
     @SequenceGenerator(
-            name = "league_sequence",
-            sequenceName = "league_sequence",
+            name = "author_sequence",
+            sequenceName = "author_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "league_sequence"
+            generator = "author_sequence"
     )
     private long id;
     private String name;
@@ -28,12 +31,20 @@ public class Author {
     @JsonIgnore
     private List<Article> articles;
 
-    public Author(String name, String profileImage, String user) {
+    public Author(String name, String profileImage) {
         this.name = name;
         this.profileImage = profileImage;
-        this.user = user;
+        this.user = getCurrentUser().getUsername();
     }
 
+    public Author() {
+    }
+
+    public User getCurrentUser() {
+        return ((User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal());
+    }
     public String getName() {
         return name;
     }
@@ -72,5 +83,14 @@ public class Author {
 
     public void setId(long id) {
         this.id = id;
+    }
+    @Override
+    public String toString() {
+        return "Author{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", profileImage='" + profileImage + '\'' +
+                ", user='" + user + '\'' +
+                '}';
     }
 }

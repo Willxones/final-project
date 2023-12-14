@@ -30,6 +30,10 @@ public class ArticleController {
     public List<Article> findArticlesByLeague(@PathVariable("leagueId") Long leagueId) {
         return articleService.findArticlesByLeague(leagueId);
     }
+    @GetMapping(path = "author/{authorId}")
+    public List<Article> findArticlesByAuthor(@PathVariable("authorId") Long authorId) {
+        return articleService.findArticlesByAuthor(authorId);
+    }
     @DeleteMapping(value = "{articleId}")
     public void deleteArticle(@PathVariable("articleId") Long id) {
         articleService.deleteArticle(id);

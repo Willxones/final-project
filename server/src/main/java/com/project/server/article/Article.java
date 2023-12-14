@@ -1,6 +1,7 @@
 package com.project.server.article;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.server.author.Author;
 import com.project.server.league.League;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
@@ -25,17 +26,18 @@ public class Article {
     private String title;
     private String headerImage;
     private String content;
-    private String author;
     private LocalDate date;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "league_id")
     private League league;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "author_id")
+    private Author author;
 
-    public Article(String title, String headerImage, String content, String author) {
+    public Article(String title, String headerImage, String content) {
         this.title = title;
         this.headerImage = headerImage;
         this.content = content;
-        this.author = author;
         this.date = LocalDate.now();
     }
 
@@ -83,13 +85,14 @@ public class Article {
         this.content = content;
     }
 
-    public String getAuthor() {
+    public Author getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Author author) {
         this.author = author;
     }
+
     public LocalDate getDate() {
         return date;
     }

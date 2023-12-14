@@ -1,5 +1,7 @@
 package com.project.server.article;
 
+import com.project.server.author.Author;
+import com.project.server.author.AuthorRepository;
 import com.project.server.league.League;
 import com.project.server.league.LeagueRepository;
 import jakarta.transaction.Transactional;
@@ -18,6 +20,8 @@ public class ArticleService {
     }
     @Autowired
     private LeagueRepository leagueRepository;
+    @Autowired
+    private AuthorRepository authorRepository;
 
     public void createArticle(Article article, Long leagueId) {
         Optional<League> leagueOptional = leagueRepository.findById(leagueId);
@@ -67,5 +71,13 @@ public class ArticleService {
             throw new IllegalStateException("League does not exist");
         }
         return articleRepository.findAllByLeague_Id(leagueId);
+    }
+
+    public List<Article> findArticlesByAuthor(Long authorId) {
+        Optional<Author> optionalAuthor = authorRepository.findById(authorId);
+        if (optionalAuthor.isEmpty()) {
+            throw new IllegalStateException("Author does not exist");
+        }
+        return articleRepository.findAllByAuthor_Id(authorId);
     }
 }
